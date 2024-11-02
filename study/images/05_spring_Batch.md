@@ -29,3 +29,113 @@
      • --job.name=helloJob,simpleJob (하나 이상의 job 을 실행 할 경우 쉼표로 구분해서 입력함)
 
 ## 2. Job and Step
+### JobBuilderFactory 
+
+1. 스프링배치는 Job과Step을 쉽게 생성 및 설정할 수 있도록 util성격의 빌더 클래스들을 제공함
+2. JobBuilderFactory
+   • JobBuilder 를 생성하는 팩토리 클래스로서 get(String name) 메서드 제공
+   • jobBuilderFactory.get(“jobName")
+      • “jobName” 은 스프링 배치가 Job 을 실행시킬 때 참조하는 Job 의 이름
+3. JobBuilder
+   • Job을 구성하는 설정조건에 따라 두개의 하위 빌더클래스를 생성하고 실제Job생성을 위임한다
+      • SimpleJobBuilder
+      • SimpleJob 을 생성하는 Builder 클래스
+   • Job 실행과 관련된 여러 설정 API를 제공한다
+   • FlowJobBuilder
+      • FlowJob 을 생성하는 Builder 클래스
+      • 내부적으로 FlowBuilder 를 반환함으로써 Flow 실행과 관련된 여러 설정 API 를 제공한다
+
+### Flow
+``` 
+package com.example.springbatch;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.FlowBuilder;
+
+import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@RequiredArgsConstructor
+public class JobConfiguration {
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+
+    @Bean
+    public Job batchJob2() {
+        return (Job) jobBuilderFactory.get("batchJob2")
+                .start(flow()) // 이제 올바르게 인식됩니다
+                .next(step5())
+                .build();
+    }
+
+    @Bean
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("step1 has executed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step step2() {
+        return stepBuilderFactory.get("step2")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("step2 has executed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step step3() {
+        return stepBuilderFactory.get("step3")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("step3 has executed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step step4() {
+        return stepBuilderFactory.get("step4")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("step4 has executed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step step5() {
+        return stepBuilderFactory.get("step5")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("step5 has executed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Flow flow() {
+        FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow");
+        flowBuilder.start(step3())
+                .next(step4())
+                .end();
+
+        return flowBuilder.build();
+    }
+
+}
+
+```
