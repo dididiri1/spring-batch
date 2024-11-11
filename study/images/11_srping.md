@@ -1,6 +1,6 @@
 # Spring Batch
 ## 실전 스프링 배치
-### 어플리케이션 예제
+### 어플리케이션 예제 (1)
 - Job-1
   - 기능
     - 파일로 부터 데이터를 읽어서 DB에 적재한다.
@@ -22,3 +22,21 @@
   - 내용
      - 정해진 시간에 주기적으로 Job-1과 Job-2 를 실행 시킨다.
      - Quatz 오픈 소스를 활용한다.
+
+![](https://github.com/dididiri1/TIL/blob/main/Batch/images/16_01.png?raw=true)
+
+> 첫번째 job의 역할은 매일매일에 새롭게 생성된 파일들을 db로 적재하는 역할
+> 두번째 job은 itemReader, itemProcessor, itemWrite를 각각 생성하고 job2는 walkek  
+> 즉 멀티스레드로 작업을 하도록 한다. 그래서 하나의 스레드가 아닌 단일 스레드가 아닌 멀티스레드  
+> 구조로 각각의 itemRead와 itemProcess와 itemWrite를 독립적으로 실행을 시크는 구조로 한다.
+
+
+### 어플리케이션 예제 (2)
+#### quartz 추가 
+``` 
+implementation 'org.springframework.boot:spring-boot-starter-quartz:3.3.5'
+``` 
+#### REST 템플릿 푸가
+``` 
+implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+``` 

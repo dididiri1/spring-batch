@@ -1,0 +1,17 @@
+package com.example.springbatch.batch.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+@AllArgsConstructor
+public class ProductVO {
+
+    private Long id;
+    private String name;
+    private int price;
+    private String type;
+
+}
