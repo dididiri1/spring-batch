@@ -45,7 +45,7 @@ public class FileJobConfiguration {
                 .<ProductVO, Product>chunk(10)
                 .reader(fileItemReader(null))
                 .processor(fileItemProcessor())
-                .writer(fileIntemWriter())
+                .writer(fileItemWriter())
                 .build();
     }
 
